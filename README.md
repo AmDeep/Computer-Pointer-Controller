@@ -15,9 +15,13 @@
 - [Edge Cases](#edge-cases)
 
 ## Overview
-The Computer Pointer Controller is a great application of computer vision concepts that combines the models for several different setups including  application that uses a gaze detection model to control the mouse pointer using an input video or a live stream from your webcam
+The Computer Pointer Controller is a great application of computer vision concepts that combines the models for several different setups including eye moevemnt, computer pointing and pose detection. The abundance of choices as to where such technologies can be used makes it a stepping stone to new machines and use cases. This project takes a definitive look at some of the models that go into creating an eye tracking movement model and relaying it back to the computer screen. More importantly, we will also spend some time looking into a comparison between certain models and their merits and demerits when it comes to design.
+
+## References
+Due to the different time commitments and projects that I was taking up, it became necessary to consult other sources from Udacity and the community to check whether or not the code has been functioning properly and if there are any improvements that can be made. The code in this repo has been written to the fullest extent of the author and is unique to his own experiments and undertakings. I would like to reference sources like https://github.com/denilDG/Computer-Pointer-Controller where I did have a small comparison to check and configue errors. Otherwise, the code is entirely unique.
 
 ## Demo video
+Attached herein are the results of one of the test runs using the models.
 [![Demo video](https://i9.ytimg.com/vi/AdKo5zGhvnI/mq3.jpg?sqp=CNCVxPgF&rs=AOn4CLDebC1uoFbpV888-WXsUxbSNmNBdg)](https://youtu.be/AdKo5zGhvnI)
 
 
@@ -25,12 +29,12 @@ The Computer Pointer Controller is a great application of computer vision concep
 
 ### Setup 
 
-#### Install Intel® Distribution of OpenVINO™ toolkit
-See this [guide](https://docs.openvinotoolkit.org/latest/) for installing openvino.
+#### Installing the Environment- Intel® Distribution of OpenVINO™ toolkit
+The projects require the use of the OpenVINO™ platform. Check out the [guide](https://docs.openvinotoolkit.org/latest/) for installing openvino.
 
 #### Intsalling pre-trained models
 
-##### First, you have to initialize openVINO Environment 
+##### Step I-Initialize the openVINO Environment 
 
 * For windows:
 ```
@@ -40,35 +44,35 @@ cd C:\Program Files (x86)\IntelSWTools\openvino\bin\
 setupvars.bat
 ```
 
-### Downloading Models Inference Files
-
-- [Face Detection Model](https://docs.openvinotoolkit.org/latest/_models_intel_face_detection_adas_binary_0001_description_face_detection_adas_binary_0001.html)
+### Step II- Downloading The Models Inference Files
 - [Facial Landmarks Detection Model](https://docs.openvinotoolkit.org/latest/_models_intel_landmarks_regression_retail_0009_description_landmarks_regression_retail_0009.html)
-- [Head Pose Estimation Model](https://docs.openvinotoolkit.org/latest/_models_intel_head_pose_estimation_adas_0001_description_head_pose_estimation_adas_0001.html)
 - [Gaze Estimation Model](https://docs.openvinotoolkit.org/latest/_models_intel_gaze_estimation_adas_0002_description_gaze_estimation_adas_0002.html)
+- [Head Pose Estimation Model](https://docs.openvinotoolkit.org/latest/_models_intel_head_pose_estimation_adas_0001_description_head_pose_estimation_adas_0001.html)
+- [Face Detection Model](https://docs.openvinotoolkit.org/latest/_models_intel_face_detection_adas_binary_0001_description_face_detection_adas_binary_0001.html)
 
-#### How to download the models
+#### Step III- Downloading The Models On The Environment
 
-* Downloading Models 
-for Face Detection Model
+* Run the following code to run the models for:-
+
+Face Detection Model
 
 ```
 python <openvino directory>/deployment_tools/tools/model_downloader/downloader.py --name "face-detection-adas-binary-0001"
 ```
 
-for landmarks-regression-retail-0009
+landmarks-regression-retail-0009
 
 ```
 python /opt/intel/openvino/deployment_tools/tools/model_downloader/downloader.py --name "landmarks-regression-retail-0009"
 ```
 
-for head-pose-estimation-adas-0001
+head-pose-estimation-adas-0001
 
 ```
 python /opt/intel/openvino/deployment_tools/tools/model_downloader/downloader.py --name "head-pose-estimation-adas-0001"
 ```
 
-for gaze-estimation-adas-0002
+gaze-estimation-adas-0002
 
 ```
 python /opt/intel/openvino/deployment_tools/tools/model_downloader/downloader.py --name "gaze-estimation-adas-0002"
