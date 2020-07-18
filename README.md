@@ -22,7 +22,7 @@ Due to the different time commitments and projects that I was taking up, it beca
 
 ## Demo video
 Attached herein are the results of one of the test runs using the models.
-[![Demo video](https://i9.ytimg.com/vi/AdKo5zGhvnI/mq3.jpg?sqp=CNCVxPgF&rs=AOn4CLDebC1uoFbpV888-WXsUxbSNmNBdg)](https://youtu.be/AdKo5zGhvnI)
+[![Demo video](https://i9.ytimg.com/vi/AdKo5zGhvnI/mq3.jpg?sqp=CIibyvgF&rs=AOn4CLDkiTINJKNfGXMtFZQvuTfcxZF66A)](https://youtu.be/AdKo5zGhvnI)
 
 
 ## Project Setup and Installation
@@ -34,7 +34,7 @@ The projects require the use of the OpenVINO™ platform. Check out the [guide](
 
 #### Intsalling pre-trained models
 
-##### Step I-Initialize the openVINO Environment 
+### Step I-Initialize the openVINO Environment 
 
 * For windows:
 ```
@@ -50,9 +50,9 @@ setupvars.bat
 - [Head Pose Estimation Model](https://docs.openvinotoolkit.org/latest/_models_intel_head_pose_estimation_adas_0001_description_head_pose_estimation_adas_0001.html)
 - [Face Detection Model](https://docs.openvinotoolkit.org/latest/_models_intel_face_detection_adas_binary_0001_description_face_detection_adas_binary_0001.html)
 
-#### Step III- Downloading The Models On The Environment
+### Step III- Downloading The Models On The Environment
 
-* Run the following code to run the models for:-
+* Run the following code to run the models for the indivudal nodes that need the inputs and outputs:-
 
 Face Detection Model
 
@@ -77,40 +77,21 @@ gaze-estimation-adas-0002
 ```
 python /opt/intel/openvino/deployment_tools/tools/model_downloader/downloader.py --name "gaze-estimation-adas-0002"
 ```
-## Arguments Documentation 
+### Step IV- Arguments FAQ 
 
-* project_file.py has several arguments
-  * -h                : Get information about all the command line arguments
-  * -fd               : (required) Specify the path of Face Detection model's name as shown below for specific precision "FP32-INT1"
-  ```
-  -fd C:\Program Files (x86)\IntelSWTools\openvino_2020.1.033\deployment_tools\open_model_zoo\tools\downloader\intel\face-detection-adas-binary-0001\FP32-INT1\face-detection-adas-binary-0001
-  ```
-  * -fl               : (required) Specify the path of Facial landmarks Detection model's name as shown below for specific precision "FP16"
-  ```
-  -fl "C:\Program Files (x86)\IntelSWTools\openvino_2020.1.033\deployment_tools\open_model_zoo\tools\downloader\intel\landmarks-regression-retail-0009\FP16\landmarks-regression-retail-0009"
-  ```
-  * -hp               : (required) Specify the path of hose pose Detection model's name as shown below for specific precision "FP16"
-  ```
-  -hp "C:\Program Files (x86)\IntelSWTools\openvino_2020.1.033\deployment_tools\open_model_zoo\tools\downloader\intel\head-pose-estimation-adas-0001\FP16\head-pose-estimation-adas-0001"
-  ```
-  * -ge               : (required) Specify the path of gaze estimation model's name as shown below for specific precision "FP16"
-  ```
-  -ge "C:\Program Files (x86)\IntelSWTools\openvino_2020.1.033\deployment_tools\open_model_zoo\tools\downloader\intel\gaze-estimation-adas-0002\FP16\gaze-estimation-adas-0002"
-  ```
-  * -i                : (required) Specify the path of input video file or enter cam for taking input video from webcam as shown below 
-  ```
-  -i D:\starter\starter\bin\demo.mp4
-  ```
-  * -d                : (optional) Specify the target device to infer the video file on the model. Suppoerted devices are: CPU, GPU,                            FPGA (For running on FPGA used HETERO:FPGA,CPU), MYRIAD. 
-  * -l                : (optional) Specify the absolute path of cpu extension if some layers of models are not supported on the device.
-  * -pt               : (optional) Specify the probability threshold for face detection model to detect the face accurately from video frame.
-  * -flag             : (optional) Specify the flags from fd, fl, hp, ge to visualize the output of corresponding models                           of each frame (write flags with space seperation. as shown below
-  ```
-  -flag fl fd ge
-  ```
-  
+-f	Leads to	path for .xml file of Face Detection model.
+-l	Leads to	path for .xml file of Facial Landmark Detection model.
+-hp	Leads to path for xml file of Head Pose Estimation model.
+-ge	Leads to path for .xml file of Gaze Estimation model.
+-debug	Optional	To debug each model's output visually, type the model name with comma seperated after --debug
+-ld	Optional	linker libraries 
+-d	Optional	Provide the target device: CPU / GPU / MYRIAD / FPGA
+-i	Opens path to video file or enter cam for webcam
+-it	Opens path to provide the source of video frames.
 
 ## Running the app
+
+The app can be executed on various hardware backends. For the purpose of this project, the greater uses of the eye tracking algorithm 
 
 - Run on CPU 
 
@@ -137,7 +118,7 @@ python <project_file.py directory> -fd <Face detection model name directory> -fl
 ```
 
 ## Directory Structure of the project 
-![Directory Structure](https://github.com/Eslam26/Computer-Pointer-Controller/blob/master/bin/DirectoryStructure.PNG)
+![Directory Structure](https://github.com/AmDeep/Computer-Pointer-Controller/blob/master/bin/Directory_Structure.png)
 
 - src folder contains all the source files:-
   * face_detection.py 
