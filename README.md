@@ -89,29 +89,29 @@ python /opt/intel/openvino/deployment_tools/tools/model_downloader/downloader.py
 -i	Opens path to video file or enter cam for webcam
 -it	Opens path to provide the source of video frames.
 
-## Running the app
+### Step V- Running the app
 
-The app can be executed on various hardware backends. For the purpose of this project, the greater uses of the eye tracking algorithm 
+The app can be executed on various hardware backends. For the purpose of this project, the greater uses of the eye tracking algorithm and its capabilities have been tested on a host of different platforms and compared. Below are the steps for running the algorithm on different systems based on the user's requirements. The commands are all inserted through a linux kernel on the user's sytem. For the purpose of this project, I was using Kali Linux. Additionally, some of the tests were also conducted using the Intel Cloud platform for OpenVino
 
-- Run on CPU 
+#### - Running on the CPU 
 
 ```
 python <project_file.py directory> -fd <Face detection model name directory> -fl <Facial landmark detection model name directory> -hp <head pose estimation model name directory> -ge <Gaze estimation model name directory> -i <input video directory> -d CPU
 ```
 
-- Run on GPU 
+#### - Running on the GPU 
 
 ```
 python <project_file.py directory> -fd <Face detection model name directory> -fl <Facial landmark detection model name directory> -hp <head pose estimation model name directory> -ge <Gaze estimation model name directory> -i <input video directory> -d GPU
 ```
 
-- Run on FPGA 
+#### - Running on the FPGA 
 
 ```
 python <project_file.py directory> -fd <Face detection model name directory> -fl <Facial landmark detection model name directory> -hp <head pose estimation model name directory> -ge <Gaze estimation model name directory> -i <input video directory> -d HETERO:FPGA,CPU
 ```
 
-- Run on NSC2
+#### - Running on the NSC2
 
 ```
 python <project_file.py directory> -fd <Face detection model name directory> -fl <Facial landmark detection model name directory> -hp <head pose estimation model name directory> -ge <Gaze estimation model name directory> -i <input video directory> -d MYRIAD
@@ -119,68 +119,73 @@ python <project_file.py directory> -fd <Face detection model name directory> -fl
 
 ## Directory Structure of the project 
 ![Directory Structure](https://github.com/AmDeep/Computer-Pointer-Controller/blob/master/bin/Directory_Structure.png)
-
+The following image shows the way in which the files and models are stored in each of the individual folders along with the main root.
 - src folder contains all the source files:-
   * face_detection.py 
-     - Contains preprocession of video frame, perform infernce on it and detect the face, postprocess the                          outputs.
+     - Contains code and models for preprocession of video frame and helps perform infernce on it and detect the face. Also contains code for postprocessing the                          outputs.
      
   * facial_landmarks_detection.py
-     - Take the deteted face as input, preprocessed it, perform inference on it and detect the eye landmarks, postprocess the outputs.
+     - Takes the deteted face as input, preprocesses it, performs inference on it and detects the ocular(eye) elements. Finally, it postprocess the outputs.
      
   * head_pose_estimation.py
-     - Take the detected face as input, preprocessed it, perform inference on it and detect the head postion by predicting yaw - roll - pitch angles, postprocess the outputs.
+     - Analyzes the detected face as input, preprocesses it, performs inference on it and detects the head postion by predicting yaw - roll - pitch angles by postprocessing the        outputs.
      
   * gaze_estimation.py
-     - Take the left eye, rigt eye, head pose angles as inputs, preprocessed it, perform inference and predict the gaze            vector, postprocess the outputs.
+     - A motion based tracking algorithm that focuses on the left eye, rigt eye, head pose angle by treating them as inputs. It preprocesses them, performs inference and               predicts the gaze vector and finally postprocesses the outputs.
      
   * input_feeder.py
-     - Contains InputFeeder class which initialize VideoCapture as per the user argument and return the frames one by one.
+     - Holds the InputFeeder class which initializes the VideoCapture as per the user argument and returns the frames one by one.
      
   * mouse_controller.py
-     - Contains MouseController class which take x, y coordinates value, speed, precisions and according these values it            moves the mouse pointer by using pyautogui library.
+     - User enabled algorithm that contains the MouseController class which takes x, y coordinates value, speed, precisions and accordingly, changes the position of the mouse          pointer by using the pyautogui library.
   * main.py
-     - Users need to run main.py file for running the app.
+     - Main scripting file that contains the files to run for executing the main processes of the app.
  
-- bin folder contains demo video which user can use for testing the app and director structure image.
+- The bin folder also contains the demo video which the user can use for testing the app along with a more defined structure for the files from the directory.
 
-## Benchmarks
-* I have Submited three jobs using this script to the DevCloud, using same demo video, but different hardware: 
-  * IEI Tank 870-Q170 edge node with an Intel® Core™ i5-6500TE (CPU)
-  * IEI Tank 870-Q170 edge node with an Intel® Core™ i5-6500TE (CPU + Integrated Intel® HD Graphics 530 card GPU)
-  * IEI Tank 870-Q170 edge node with an Intel® Core™ i5-6500TE, with IEI Mustang-F100-A10 card (Arria 10 FPGA).
+### Step VI- Benchmarking Tests & Comparison Tests
+After mich deliberation and testing by taking references as well as applying some of my own ideas to the mainframe and the algorithms, I was able to submit scripting jobs to the DevCloud by using the given demo video. The test for the algorithms was performed on three of the most common hardwares to illustrtate and configure the main differences between the different models. These hardwares included:-
 
-* for FP32
-  | Type of Hardware | Total inference time in seconds              | Time for loading the model | fps |
-  |------------------|----------------------------------------------|----------------------------|------
-  | CPU              |  68                                          |  1.5                       |  9  |
-  | GPU              |  69                                          |  55                        |  9  |
-  | FPGA             |  118                                         |  6                         |  5  |
+ 1. IEI Tank 870-Q170 edge node with an Intel® Core™ i5-6500TE (CPU)
+ 2. IEI Tank 870-Q170 edge node with an Intel® Core™ i5-6500TE (CPU + Integrated Intel® HD Graphics 530 card GPU)
+ 3. IEI Tank 870-Q170 edge node with an Intel® Core™ i5-6500TE, with IEI Mustang-F100-A10 card (Arria 10 FPGA).
 
-* for FP16
-  | Type of Hardware | Total inference time in seconds              | Time for loading the model | fps |
-  |------------------|----------------------------------------------|----------------------------|------
-  | CPU              |  77                                          |  1.3                       |  8  |
-  | GPU              |  75                                          |  52.4                      |  9  |
-  | FPGA             |  125                                         |  4.5                       |  5  |
+##### Results For Scripts At FP32
+  | Hardware Used    | Total inference time in seconds              | Model Loading Time         | fps  |
+  |------------------|----------------------------------------------|----------------------------|------|
+  | CPU              |  72                                          |  3.7                       |  11  |
+  | GPU              |  65                                          |  52                        |  11  |
+  | FPGA             |  102                                         |  8                         |  5   |
 
-
-* for INT8
-  | Type of Hardware | Total inference time in seconds              | Time for loading the model | fps |
-  |------------------|----------------------------------------------|----------------------------|------
-  | CPU              |  79                                          |  1.3                       |  8  |
-  | GPU              |  74                                          |  52 .4                     |  9  |
-  | FPGA             |  130                                         |  3                         |  5  |
-
-## Results
-
-- First of all, after decreasing prescison, accuracy of the model decreases
-- As we see that GPA excutes more frames than the different hardwares, that goes the excution units and isntruction sets which is compatible and optmized with FP16
-- FPGA takes higher inference time because it works on each gate and programmed it to be compatible for this application 
+##### Results For Scripts At FP16
+  | Hardware Used    | Total inference time in seconds              | Model Loading Time         | fps |
+  |------------------|----------------------------------------------|----------------------------|-----|
+  | CPU              |  80                                          |  5.6                       |  9  |
+  | GPU              |  68                                          |  60.8                      |  11 |
+  | FPGA             |  117                                         |  3.9                       |  8  |
 
 
-## Edge Cases 
+##### Results for INT8
+  | Hardware Used    | Total inference time in seconds              | Model Loading Time         | fps |
+  |------------------|----------------------------------------------|----------------------------|-----|
+  | CPU              |  83                                          |  7.6                       |  9  |
+  | GPU              |  79                                          |  67.2                      |  10 |
+  | FPGA             |  118                                         |  9.2                       |  6  |
 
-- If there is more than one face detected, it extracts only one face and do inference on it and ignoring other faces.
+### Step VI- Results
+
+1. The FPGA doesn't offer the shortest loading time in all cases and actually performs worse than the GPU in some cases.
+2. The reduction in precision plays a role in the model accuracy which also takes a hit.
+2. The GPA does have the highest number of frames and executes more frames than its counterparts but suffers from long model loading times and less than reasonable inference        times.
+3. The CPU hardware backend is more compatible at FP32 and FP16 and FP32 due to the decent performances on inference and frame analysis.
+4. The model loading time and the total inference remains within a consistent range for all the hardware components.
+5. The FPGA takes longer time periods for inference as it spends more time on each gate.
+6. Gaze detection, analysis and computer pointing is still highly dependent on the strength on the backend and the system from which the code is being executed. In this regard,    a Linux backend provides ample space for spacing allocation and memory shifts. 
+
+
+### Step VII- Notable Edge Cases 
+1. The model fixes its attention on one face and maintains this for the rest of the analysis which makes it effective in videos with multiple people where overlapping can cause issues.
+2. Such applications can also be extended to help in the day to day processes of disabled individuals and provide them assistance in handling computer operations using facial cues and gazes.
 
 
 
