@@ -1,6 +1,5 @@
 '''
-This is a sample class for a model. You may choose to use it as-is or make any changes to it.
-This has been provided just to give you an idea of how to structure your model class.
+This is a sample class for a model. The model was sourced from multiple referenced materials and prepared with as uniquely as possible. Users can use the code as intended or make changes to it to add more funcitonalities.
 '''
 
 import cv2
