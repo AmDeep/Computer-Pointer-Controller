@@ -36,7 +36,7 @@ The projects require the use of the OpenVINO™ platform. Check out the [guide](
 
 ### Step I-Initialize the openVINO Environment 
 
-* For windows:
+##### For a Windows based environment:-
 ```
 cd C:\Program Files (x86)\IntelSWTools\openvino\bin\
 ```
@@ -45,34 +45,41 @@ setupvars.bat
 ```
 
 ### Step II- Downloading The Models Inference Files
-- [Facial Landmarks Detection Model](https://docs.openvinotoolkit.org/latest/_models_intel_landmarks_regression_retail_0009_description_landmarks_regression_retail_0009.html)
-- [Gaze Estimation Model](https://docs.openvinotoolkit.org/latest/_models_intel_gaze_estimation_adas_0002_description_gaze_estimation_adas_0002.html)
-- [Head Pose Estimation Model](https://docs.openvinotoolkit.org/latest/_models_intel_head_pose_estimation_adas_0001_description_head_pose_estimation_adas_0001.html)
-- [Face Detection Model](https://docs.openvinotoolkit.org/latest/_models_intel_face_detection_adas_binary_0001_description_face_detection_adas_binary_0001.html)
+
+##### 1. [Facial Landmarks Detection Model](https://docs.openvinotoolkit.org/latest/_models_intel_landmarks_regression_retail_0009_description_landmarks_regression_retail_0009.html)
+
+##### 2. [Gaze Estimation Model]
+(https://docs.openvinotoolkit.org/latest/_models_intel_gaze_estimation_adas_0002_description_gaze_estimation_adas_0002.html)
+
+##### 3. [Head Pose Estimation Model]
+(https://docs.openvinotoolkit.org/latest/_models_intel_head_pose_estimation_adas_0001_description_head_pose_estimation_adas_0001.html)
+
+##### 4. [Face Detection Model]
+(https://docs.openvinotoolkit.org/latest/_models_intel_face_detection_adas_binary_0001_description_face_detection_adas_binary_0001.html)
 
 ### Step III- Downloading The Models On The Environment
 
-* Run the following code to run the models for the indivudal nodes that need the inputs and outputs:-
+* Run the following code to run the models for the indivudal nodes that need the inputs and outputs along with the directory and listings of the algorithms:-
 
-Face Detection Model
+##### 1. Face Detection Model
 
 ```
 python <openvino directory>/deployment_tools/tools/model_downloader/downloader.py --name "face-detection-adas-binary-0001"
 ```
 
-landmarks-regression-retail-0009
+##### 2. landmarks-regression-retail-0009
 
 ```
 python /opt/intel/openvino/deployment_tools/tools/model_downloader/downloader.py --name "landmarks-regression-retail-0009"
 ```
 
-head-pose-estimation-adas-0001
+##### 3. head-pose-estimation-adas-0001
 
 ```
 python /opt/intel/openvino/deployment_tools/tools/model_downloader/downloader.py --name "head-pose-estimation-adas-0001"
 ```
 
-gaze-estimation-adas-0002
+##### 4. gaze-estimation-adas-0002
 
 ```
 python /opt/intel/openvino/deployment_tools/tools/model_downloader/downloader.py --name "gaze-estimation-adas-0002"
@@ -93,25 +100,25 @@ python /opt/intel/openvino/deployment_tools/tools/model_downloader/downloader.py
 
 The app can be executed on various hardware backends. For the purpose of this project, the greater uses of the eye tracking algorithm and its capabilities have been tested on a host of different platforms and compared. Below are the steps for running the algorithm on different systems based on the user's requirements. The commands are all inserted through a linux kernel on the user's sytem. For the purpose of this project, I was using Kali Linux. Additionally, some of the tests were also conducted using the Intel Cloud platform for OpenVino
 
-#### - Running on the CPU 
+#### 1. Running on the CPU 
 
 ```
 python <project_file.py directory> -fd <Face detection model name directory> -fl <Facial landmark detection model name directory> -hp <head pose estimation model name directory> -ge <Gaze estimation model name directory> -i <input video directory> -d CPU
 ```
 
-#### - Running on the GPU 
+#### 2. Running on the GPU 
 
 ```
 python <project_file.py directory> -fd <Face detection model name directory> -fl <Facial landmark detection model name directory> -hp <head pose estimation model name directory> -ge <Gaze estimation model name directory> -i <input video directory> -d GPU
 ```
 
-#### - Running on the FPGA 
+#### 3. Running on the FPGA 
 
 ```
 python <project_file.py directory> -fd <Face detection model name directory> -fl <Facial landmark detection model name directory> -hp <head pose estimation model name directory> -ge <Gaze estimation model name directory> -i <input video directory> -d HETERO:FPGA,CPU
 ```
 
-#### - Running on the NSC2
+#### 4. Running on the NSC2
 
 ```
 python <project_file.py directory> -fd <Face detection model name directory> -fl <Facial landmark detection model name directory> -hp <head pose estimation model name directory> -ge <Gaze estimation model name directory> -i <input video directory> -d MYRIAD
@@ -121,34 +128,28 @@ python <project_file.py directory> -fd <Face detection model name directory> -fl
 ![Directory Structure](https://github.com/AmDeep/Computer-Pointer-Controller/blob/master/bin/Directory_Structure.png)
 The following image shows the way in which the files and models are stored in each of the individual folders along with the main root.
 - src folder contains all the source files:-
-  * face_detection.py 
-     - Contains code and models for preprocession of video frame and helps perform infernce on it and detect the face. Also contains code for postprocessing the                          outputs.
+##### 1. gaze_estimation.py:- A motion based tracking algorithm that focuses on the left eye, rigt eye, head pose angle by treating them as inputs. It preprocesses them, performs inference and predicts the gaze vector and finally postprocesses the outputs.
      
-  * facial_landmarks_detection.py
-     - Takes the deteted face as input, preprocesses it, performs inference on it and detects the ocular(eye) elements. Finally, it postprocess the outputs.
+##### 2. input_feeder.py:- Holds the InputFeeder class which initializes the VideoCapture as per the user argument and returns the frames one by one.
      
-  * head_pose_estimation.py
-     - Analyzes the detected face as input, preprocesses it, performs inference on it and detects the head postion by predicting yaw - roll - pitch angles by postprocessing the        outputs.
+#####  3. mouse_controller.py:- User enabled algorithm that contains the MouseController class which takes x, y coordinates value, speed, precisions and accordingly, changes the position of the mouse pointer by using the pyautogui library.
+
+#####  4. main.py:- Main scripting file that contains the files to run for executing the main processes of the app.
+
+##### 5. face_detection.py:- Contains code and models for preprocession of video frame and helps perform infernce on it and detect the face. Also contains code for postprocessing the outputs.
      
-  * gaze_estimation.py
-     - A motion based tracking algorithm that focuses on the left eye, rigt eye, head pose angle by treating them as inputs. It preprocesses them, performs inference and               predicts the gaze vector and finally postprocesses the outputs.
+#####  6. facial_landmarks_detection.py:- Takes the deteted face as input, preprocesses it, performs inference on it and detects the ocular(eye) elements. Finally, it postprocess the outputs.
      
-  * input_feeder.py
-     - Holds the InputFeeder class which initializes the VideoCapture as per the user argument and returns the frames one by one.
+#####  7. head_pose_estimation.py:- Analyzes the detected face as input, preprocesses it, performs inference on it and detects the head postion by predicting yaw - roll - pitch angles by postprocessing the outputs.
      
-  * mouse_controller.py
-     - User enabled algorithm that contains the MouseController class which takes x, y coordinates value, speed, precisions and accordingly, changes the position of the mouse          pointer by using the pyautogui library.
-  * main.py
-     - Main scripting file that contains the files to run for executing the main processes of the app.
  
 - The bin folder also contains the demo video which the user can use for testing the app along with a more defined structure for the files from the directory.
 
 ### Step VI- Benchmarking Tests & Comparison Tests
 After mich deliberation and testing by taking references as well as applying some of my own ideas to the mainframe and the algorithms, I was able to submit scripting jobs to the DevCloud by using the given demo video. The test for the algorithms was performed on three of the most common hardwares to illustrtate and configure the main differences between the different models. These hardwares included:-
-
- 1. IEI Tank 870-Q170 edge node with an Intel® Core™ i5-6500TE (CPU)
- 2. IEI Tank 870-Q170 edge node with an Intel® Core™ i5-6500TE (CPU + Integrated Intel® HD Graphics 530 card GPU)
- 3. IEI Tank 870-Q170 edge node with an Intel® Core™ i5-6500TE, with IEI Mustang-F100-A10 card (Arria 10 FPGA).
+ 1. IEI Tank 870-Q170 edge node booted with an Intel® Core™ i5-6500TE (this includes the CPU and the Integrated Intel® HD Graphics 530 card GPU)
+ 2. IEI Tank 870-Q170 edge node that uses a typical Intel® Core™ i5-6500TE (CPU)
+ 3. IEI Tank 870-Q170 edge node that uses an Intel® Core™ i5-6500TE, with IEI Mustang-F100-A10 card (Arria 10 FPGA).
 
 ##### Results For Scripts At FP32
   | Hardware Used    | Total inference time in seconds              | Model Loading Time         | fps  |
