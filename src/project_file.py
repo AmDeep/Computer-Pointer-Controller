@@ -1,3 +1,4 @@
+#Loading all the packages for the project.
 import cv2
 import os
 import numpy as np
@@ -12,7 +13,7 @@ from argparse import ArgumentParser
 from input_feeder import InputFeeder
 import math
 
-
+#The following function helps in creating defining the components for the estimation models for mouse pointing, gaze assessment head poses and processing them.
 def build_argparser():
     """
     Parse command line arguments.
@@ -51,25 +52,25 @@ def build_argparser():
                              "hp for Head Pose Estimation Model, ge for Gaze Estimation Model.")
     return parser
 
-
-def draw_axes(frame, center_of_face, yaw, pitch, roll, scale, focal_length):
-    yaw *= np.pi / 180.0
-    pitch *= np.pi / 180.0
-    roll *= np.pi / 180.0
-    cx = int(center_of_face[0])
-    cy = int(center_of_face[1])
+#The following definition command takes in data for the center of the face, the frame, the yaw_face(defined as the rotation angles), pitch, roll, scale and the focal length of the eyes estimated by the algorithms.
+def draw_axes(frame, cof, yaw_face, pitch_eyes, ro_face, scale, fl_dim):
+    yaw_face *= np.pi / 180.0
+    pitch_eyes *= np.pi / 180.0
+    ro_face *= np.pi / 180.0
+    cx = int(cof[0])
+    cy = int(cof[1])
     r_x = np.array([[1, 0, 0],
-                    [0, math.cos(pitch), -math.sin(pitch)],
-                    [0, math.sin(pitch), math.cos(pitch)]])
-    r_y = np.array([[math.cos(yaw), 0, -math.sin(yaw)],
+                    [0, math.cos(pitch_eyes), -math.sin(pitch_eyes)],
+                    [0, math.sin(pitch_eyes), math.cos(pitch_eyes)]])
+    r_y = np.array([[math.cos(yaw_face), 0, -math.sin(yaw_face)],
                     [0, 1, 0],
-                    [math.sin(yaw), 0, math.cos(yaw)]])
-    r_z = np.array([[math.cos(roll), -math.sin(roll), 0],
-                    [math.sin(roll), math.cos(roll), 0],
+                    [math.sin(yaw_face), 0, math.cos(yaw_face)]])
+    r_z = np.array([[math.cos(ro_face), -math.sin(ro_face), 0],
+                    [math.sin(ro_face), math.cos(ro_face), 0],
                     [0, 0, 1]])
 
     r = r_z @ r_y @ r_x
-    camera_matrix = build_camera_matrix(center_of_face, focal_length)
+    camera_matrix = build_camera_matrix(cof, fo_dim)
     xaxis = np.array(([1 * scale, 0, 0]), dtype='float32').reshape(3, 1)
     yaxis = np.array(([0, -1 * scale, 0]), dtype='float32').reshape(3, 1)
     zaxis = np.array(([0, 0, -1 * scale]), dtype='float32').reshape(3, 1)
@@ -99,18 +100,18 @@ def draw_axes(frame, center_of_face, yaw, pitch, roll, scale, focal_length):
     return frame
 
 
-def build_camera_matrix(center_of_face, focal_length):
-    cx = int(center_of_face[0])
-    cy = int(center_of_face[1])
+def build_camera_matrix(cof, focal_length):
+    cx = int(cof[0])
+    cy = int(cof[1])
     camera_matrix = np.zeros((3, 3), dtype='float32')
-    camera_matrix[0][0] = focal_length
+    camera_matrix[0][0] = fo_dim
     camera_matrix[0][2] = cx
-    camera_matrix[1][1] = focal_length
+    camera_matrix[1][1] = fo_dim
     camera_matrix[1][2] = cy
     camera_matrix[2][2] = 1
     return camera_matrix
 
-
+#The main code for the repo that brings in all the defined functions and processes the videos by frame.
 def main():
     # command line args
     args = build_argparser().parse_args()
@@ -199,22 +200,22 @@ def main():
                               (150, 0, 150))
             if 'hp' in oneneneflags:
                 cv2.putText(preview_window,
-                            "yaw:{:.1f} | pitch:{:.1f} | roll:{:.1f}".format(head_pose_estimation_model_output[0],
+                            "yaw_face:{:.1f} | pitch_eyes:{:.1f} | roll_face:{:.1f}".format(head_pose_estimation_model_output[0],
                                                                              head_pose_estimation_model_output[1],
                                                                              head_pose_estimation_model_output[2]),
                             (20, 20), cv2.FONT_HERSHEY_COMPLEX, 0.35, (0, 0, 0), 1)
             if 'ge' in oneneneflags:
 
-                yaw = head_pose_estimation_model_output[0]
-                pitch = head_pose_estimation_model_output[1]
-                roll = head_pose_estimation_model_output[2]
-                focal_length = 950.0
+                yaw_face = head_pose_estimation_model_output[0]
+                pitch_eyes = head_pose_estimation_model_output[1]
+                roll_face = head_pose_estimation_model_output[2]
+                fo_dim = 950.0
                 scale = 50
-                center_of_face = (face_image.shape[1] / 2, face_image.shape[0] / 2, 0)
+                cof = (face_image.shape[1] / 2, face_image.shape[0] / 2, 0)
                 if 'fd' in oneneneflags or 'fl' in oneneneflags:
-                    draw_axes(preview_window, center_of_face, yaw, pitch, roll, scale, focal_length)
+                    draw_axes(preview_window, cof, yaw_face, pitch_eyes, roll_face, scale, fo_dim)
                 else:
-                    draw_axes(frame, center_of_face, yaw, pitch, roll, scale, focal_length)
+                    draw_axes(frame, cof, yaw_face, pitch_eyes, roll_face, scale, fo_dim)
 
         if len(oneneneflags) != 0:
             img_hor = np.hstack((cv2.resize(frame, (500, 500)), cv2.resize(preview_window, (500, 500))))
