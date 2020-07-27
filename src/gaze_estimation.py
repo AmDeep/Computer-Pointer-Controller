@@ -19,10 +19,18 @@ class GazeEstimationModelClass:
         '''
         this method is to set instance variables.
         '''
-        self.model_weights = model_name + '.bin'
-        self.model_structure = model_name + '.xml'
+        self.model_name = model_name
         self.device = device
-        self.extension = extensions
+        self.extensions = extensions
+        self.model_structure = self.model_name
+        self.model_weights = self.model_name.split(".")[0]+'.bin'
+        self.plugin = None
+        self.network = None
+        self.exec_net = None
+        self.input_name = None
+        self.input_shape = None
+        self.output_names = None
+        self.output_shape = None
 
         try:
             self.model = IENetwork(self.model_structure, self.model_weights)
@@ -39,10 +47,10 @@ class GazeEstimationModelClass:
         This method is for loading the model to the device specified by the user.
         If your model requires any Plugins, this is where you can load them.
         '''
-        self.model = IENetwork(self.model_structure, self.model_weights)
-        self.core = IECore()
-        supported_layers = self.core.query_network(network=self.model, device_name=self.device)
-        unsupported_layers = [R for R in self.model.layers.keys() if R not in supported_layers]
+        self.plugin = IECore()
+        self.network = self.plugin.read_network(model=self.model_structure, weights=self.model_weights)
+        supported_layers = self.plugin.query_network(network=self.network, device_name=self.device)
+        unsupported_layers = [l for l in self.network.layers.keys() if l not in supported_layers]
 
         if len(unsupported_layers) != 0:
             log.error("Unsupported layers found ...")
@@ -53,7 +61,10 @@ class GazeEstimationModelClass:
             if len(unsupported_layers) != 0:
                 log.error("ERROR: There are still unsupported layers after adding extension...")
                 exit(1)
-        self.net = self.core.load_network(network=self.model, device_name=self.device, num_requests=1)
+        self.exec_net = self.plugin.load_network(network=self.network, device_name=self.device,num_requests=1)
+        self.input_name = [i for i in self.network.inputs.keys()]
+        self.input_shape = self.network.inputs[self.input_name[1]].shape
+        self.output_names = [i for i in self.network.outputs.keys()]
 
     def predict(self, left_eye_image, right_eye_image, head_pose_output):
         '''
